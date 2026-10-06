@@ -9,7 +9,13 @@ This is a separate experimental variant of `video-to-screenplay`. Its purpose is
 
 ## Setup on macOS or Windows
 
-Install and use the existing `video-to-screenplay` skill for FFmpeg, Whisper, video preparation, selection, and rendering. Keep Laya optional and isolated from that skill's environment. In a Python 3.10+ virtual environment, run `python -m pip install laya` (Windows: `py -m venv .venv-laya`, then `.venv-laya\Scripts\python.exe -m pip install laya`; macOS: `python3 -m venv .venv-laya`, then `.venv-laya/bin/python -m pip install laya`). The first real Laya run downloads a model. Use a short sample before processing a full film. If package installation or model loading fails, use the base workflow and report the cause; do not omit dialogue.
+Install and use the existing `video-to-screenplay` skill for FFmpeg, Whisper, video preparation, selection, and rendering. Keep Laya optional and isolated from that skill's environment. The base installer provides `uv`; from this skill's directory, create `.venv-laya` and install Laya as follows:
+
+- **Windows 10/11 x64 (PowerShell):** `uv venv --python 3.12 .venv-laya`, then `uv pip install --python .venv-laya\Scripts\python.exe laya`. Verify with `.venv-laya\Scripts\python.exe -I -c "import laya; print(laya.__version__)"`.
+- **macOS 14+ on Apple Silicon (Terminal):** `uv venv --python 3.12 .venv-laya`, then `uv pip install --python .venv-laya/bin/python laya`. Verify with `.venv-laya/bin/python -I -c "import laya; print(laya.__version__)"`.
+- **macOS 14+ on Intel (Terminal):** `uv venv --python 3.11 .venv-laya`, then `uv pip install --python .venv-laya/bin/python 'numpy<2' 'torch==2.2.2' 'transformers==4.57.6' laya`. Verify with the same macOS command above. These pins follow [Laya's Intel Mac installation guidance](https://github.com/NandhaKishorM/laya#macos-including-intel-macs).
+
+The first real Laya run downloads a checkpoint. Use a short sample before processing a full film. If package installation or model loading fails, use the base workflow and report the cause; do not omit dialogue. This skill's Laya setup is based on upstream platform instructions and has not yet been run on a Windows or Intel Mac machine by this project.
 
 ## Workflow
 
@@ -18,11 +24,18 @@ Install and use the existing `video-to-screenplay` skill for FFmpeg, Whisper, vi
 3. Use the labels as a review queue only. Listen to and inspect uncertain or suspected lyric windows, and spot-check apparent dialogue windows. Keep every line of intelligible spoken dialogue even when Laya labels it otherwise. Use audio and video to decide whether a sequence is song, action, title, or credits. For each video song, record its actual locations, visible performers/characters, and distinctive actions. Do not let raw Laya confidence automatically remove any source interval.
 4. Complete the base skill's scene ledger, character roster, Fountain screenplay, and illustrated PDF. Give dialogue scenes and each song location a supported `INT./EXT. LOCATION - DAY/NIGHT` heading; use `TIME UNKNOWN` when needed. Describe songs as concise visual montages without lyrics. Put a matching `Tinglish: ...` line immediately under every Telugu dialogue line in the same spoken turn, keeping it a transliteration rather than an English translation. Use `kind: "song"` for song scene spans in the illustrated renderer so the left-side screenshot comes from the song. For audio-only material, do not invent locations or visual montage beats. Retain the SRT, Laya JSON, source-time selection, and any corrected labels as audit material. For a full film, process ordered 15–30 minute batches and merge the ledger.
 
-Example:
+Example from this skill's directory on macOS:
 
 ```bash
-python scripts/triage_laya.py captions.srt --output triage.json --dry-run
-python scripts/triage_laya.py captions.srt --output triage.json --model multilingual
+.venv-laya/bin/python scripts/triage_laya.py captions.srt --output triage.json --dry-run
+.venv-laya/bin/python scripts/triage_laya.py captions.srt --output triage.json --model multilingual
+```
+
+On Windows PowerShell, use:
+
+```powershell
+.\.venv-laya\Scripts\python.exe scripts\triage_laya.py captions.srt --output triage.json --dry-run
+.\.venv-laya\Scripts\python.exe scripts\triage_laya.py captions.srt --output triage.json --model multilingual
 ```
 
 Use `--model multilingual` for Telugu or mixed-language films. The script's labels come from text alone and are not scene descriptions.

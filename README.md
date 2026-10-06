@@ -4,8 +4,8 @@ An experimental Codex skill that adds [Laya](https://github.com/NandhaKishorM/la
 
 ## Install
 
-Install the [base skill](https://github.com/vamshicreates/video-to-screenplay) and its requirements first. Clone this repository into `~/.codex/skills/video-to-screenplay-laya` (on Windows, `$HOME\.codex\skills\video-to-screenplay-laya`). A Python 3.10+ virtual environment can then install the optional Laya package with `python -m pip install laya`. The first Laya run downloads a model. See [SKILL.md](SKILL.md) for the workflow and platform-specific environment commands.
+Install the [base skill](https://github.com/vamshicreates/video-to-screenplay) and its requirements first. Clone this repository into `~/.codex/skills/video-to-screenplay-laya` (on Windows, `$HOME\.codex\skills\video-to-screenplay-laya`). Then create this skill's separate `.venv-laya` with the base installer's `uv`. Windows x64 and Apple Silicon macOS can use Python 3.12 and `laya`; Intel macOS needs Python 3.11 plus the NumPy/PyTorch/Transformers pins in [SKILL.md](SKILL.md). The first Laya run downloads a model.
 
-Use `$video-to-screenplay-laya` in Codex to invoke this variant. Run `scripts/triage_laya.py captions.srt --output triage.json --dry-run` to check caption timing before installing or running Laya.
+Use `$video-to-screenplay-laya` in Codex to invoke this variant. Run `scripts/triage_laya.py captions.srt --output triage.json --dry-run` with `.venv-laya`'s Python to check caption timing before running Laya.
 
 This variant has not yet been benchmarked on a film, so its speed, token, and quality effects remain unmeasured.
